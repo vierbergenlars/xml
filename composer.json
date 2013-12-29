@@ -1,0 +1,19 @@
+{
+    "name": "vierbergenlars/xml",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lars Vierbergen",
+            "email": "vierbergenlars@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "simpletest/simpletest": "~1"
+    },
+    "autoload": {
+        "psr-0": {
+            "vierbergenlars\\Xml\\": ""
+        }
+    },
+    "target-dir": "vierbergenlars/Xml"
+}
