@@ -19,6 +19,8 @@ A sane wrapper around [SimpleXML](http://be2.php.net/manual/en/book.simplexml.ph
 
 ### `XmlElementInterface`
 
+| Return                   | Function signature                  | Documentation                                                                               |
+|-------------------------:|:------------------------------------|---------------------------------------------------------------------------------------------|
 | `string`                 | `getName()`                         | Get the element tag name                                                                    |
 | `string`                 | `text()`                            | Get the text contained in the element                                                       |
 | `string`                 | `attr(string $name)`                | Get the value of the attribute `$name` on the element                                       |
@@ -28,12 +30,16 @@ A sane wrapper around [SimpleXML](http://be2.php.net/manual/en/book.simplexml.ph
 
 ### `XmlCollectionInterface`: `Iterator`, `ArrayAccess`, `Countable`
 
+| Return                   | Function signature                  | Documentation                                         |
+|-------------------------:|:------------------------------------|-------------------------------------------------------|
 | `XmlElementInterface`    | `get(int $pos)`                     | Get the element at the given position                 |
 | `XmlCollectionInterface` | `find(array $attributes = array())` | Filters members of the collection on their attributes |
 
 ### `XmlAttributesInterface`: `Iterator`, `ArrayAccess`, `Countable`
 
-| `string|null` | `get(string $name)` | Get the value of the attribute `$name` |
+| Return                   | Function signature                  | Documentation                          |
+|-------------------------:|:------------------------------------|----------------------------------------|
+| `string|null`            | `get(string $name)`                 | Get the value of the attribute `$name` |
 
 ## Usage
 
