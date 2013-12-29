@@ -7,6 +7,16 @@ XML
 
 A sane wrapper around [SimpleXML](http://be2.php.net/manual/en/book.simplexml.php)
 
+
+* [Installation](#installation)
+* [Usage](#usage)
+* [Reference](#reference)
+  - [`XmlElementInterface`](#xmlelementinterface)
+  - [`XmlCollectionInterface`](#xmlcollectioninterface)
+  - [`XmlAttributesInterface`](#xmlattributesinterface)
+* [License](#license)
+
+
 ## Installation
 
 `composer require vierbergenlars/xml:@stable`
@@ -15,31 +25,6 @@ A sane wrapper around [SimpleXML](http://be2.php.net/manual/en/book.simplexml.ph
 > [`vierbergenlars/xml`](https://packagist.org/packages/vierbergenlars/xml)
 > page to choose a stable version to use, avoid the `@stable` meta constraint.
 
-## Reference
-
-### `XmlElementInterface`
-
-| Return                   | Function signature                  | Documentation                                                                               |
-|-------------------------:|:------------------------------------|---------------------------------------------------------------------------------------------|
-| `string`                 | `getName()`                         | Get the element tag name                                                                    |
-| `string`                 | `text()`                            | Get the text contained in the element                                                       |
-| `string`                 | `attr(string $name)`                | Get the value of the attribute `$name` on the element                                       |
-| `XmlAttributesInterface` | `attributes()`                      | Gets all attributes on the element                                                          |
-| `XmlCollectionInterface` | `children(string $name = null)`     | Get all children of the element (or only those with the specified name if `$name !== null`) |
-| `XmlCollectionInterface` | `find(array $attributes = array())` | Get the children of the element whose attributes match those in `$attributes`.              |
-
-### `XmlCollectionInterface`: `Iterator`, `ArrayAccess`, `Countable`
-
-| Return                   | Function signature                  | Documentation                                         |
-|-------------------------:|:------------------------------------|-------------------------------------------------------|
-| `XmlElementInterface`    | `get(int $pos)`                     | Get the element at the given position                 |
-| `XmlCollectionInterface` | `find(array $attributes = array())` | Filters members of the collection on their attributes |
-
-### `XmlAttributesInterface`: `Iterator`, `ArrayAccess`, `Countable`
-
-| Return                   | Function signature                  | Documentation                          |
-|-------------------------:|:------------------------------------|----------------------------------------|
-| `string|null`            | `get(string $name)`                 | Get the value of the attribute `$name` |
 
 ## Usage
 
@@ -146,6 +131,81 @@ This is an example of using `XmlCollectionInterface::find()` to only select the 
 
 echo 'Total: ' . $files->count() . "\n";
 ```
+
+## Reference
+
+### `XmlElementInterface`
+
+| Return                   | Function signature                  | Documentation                                                                               |
+|-------------------------:|:------------------------------------|---------------------------------------------------------------------------------------------|
+| `string`                 | `getName()`                         | Get the element tag name                                                                    |
+| `string`                 | `text()`                            | Get the text contained in the element                                                       |
+| `string`                 | `attr(string $name)`                | Get the value of the attribute `$name` on the element                                       |
+| `XmlAttributesInterface` | `attributes()`                      | Gets all attributes on the element                                                          |
+| `XmlCollectionInterface` | `children(string $name = null)`     | Get all children of the element (or only those with the specified name if `$name !== null`) |
+| `XmlCollectionInterface` | `find(array $attributes = array())` | Get the children of the element whose attributes match those in `$attributes`.              |
+
+### `XmlCollectionInterface`
+
+Implements interfaces `Iterator`, `ArrayAccess`, `Countable`
+
+| Return                   | Function signature                  | Documentation                                                     |
+|-------------------------:|:------------------------------------|-------------------------------------------------------------------|
+| `XmlElementInterface`    | `get(int $pos)`                     | Get the element at the given position                             |
+| `XmlCollectionInterface` | `find(array $attributes = array())` | Filters members of the collection on their attributes             |
+| `int`                    | `count()`                           | `Countable::count()` Count the elements in the collection         |
+| `boolean`                | `offsetExists(int $offset)`         | `ArrayAccess::offsetExists` Whether a offset exists (see `get()`) |
+| `XmlElementInterface`    | `offsetGet(int $offset)`            | `ArrayAccess::offsetGet()` Offset to retrieve                     |
+| -                        | `offsetSet()`                       | Throws `LogicException`. The collection is read-only.             |
+| -                        | `offsetUnset()`                     | Throws `LogicException`. The collection is read-only.             |
+| `XmlElementInterface`    | `current()`                         | `Iterator::current()` Return the current element                  |
+| `int`                    | `key()`                             | `Iterator::key()` Return key of the current element               |
+| `void`                   | `next()`                            | `Iterator::next()` Move forward to next element                   |
+| `void`                   | `rewind()`                          | `Iterator::rewind()` Rewind the iterator to the first element     |
+| `boolean`                | `valid()`                           | `Iterator::valid()` Checks if current position is valid           |
+
+1. This object implements `ArrayAccess`:
+  * `$xmlCollectionInterface[$offset]` calls `$xmlCollectionInterface->offsetGet($offset)`
+  * `isset($xmlCollectionInterface[$offset])` calls `$xmlCollectionInterface->offsetExists($offset)`
+  * `$xmlCollectionInterface[$offset] = $mixed` calls `$xmlCollectionInterface->offsetSet($offset, $mixed)` and throws an exception.
+  * `unset($xmlCollectionInterface[$offset])` calls `$xmlCollectionInterface->offsetUnset($offset)` and throws an exception.
+
+2. This object implements `Countable`:
+  * `count($xmlCollectionInterface)` calls `$xmlCollectionInterface->count()`
+
+3. This object implements `Iterator`
+  * `foreach($xmlCollectionInterface as $key => $value){}` calls `$xmlCollectionInterface->rewind()` once, `$xmlCollectionInterface->valid()` before each iteration, and if it returns true sets `$key = $xmlCollectionInterface->key(); $value = $xmlCollectionInterface->current()`. Finally calls `$xmlCollectionInterface->next()`.
+
+### `XmlAttributesInterface`
+
+Implements interfaces `Iterator`, `ArrayAccess`, `Countable`
+
+| Return                   | Function signature                  | Documentation                                                      |
+|-------------------------:|:------------------------------------|--------------------------------------------------------------------|
+| `string` or `null`       | `get(string $name)`                 | Get the value of the attribute `$name`                             |
+| `int`                    | `count()`                           | `Countable::count()` Count the elements in the collection          |
+| `boolean`                | `offsetExists(int $offset)`         | `ArrayAccess::offsetExists` Whether a offset exists  (see `get()`) |
+| `string` or `null`       | `offsetGet(int $offset)`            | `ArrayAccess::offsetGet()` Offset to retrieve                      |
+| -                        | `offsetSet()`                       | Throws `LogicException`. The collection is read-only.              |
+| -                        | `offsetUnset()`                     | Throws `LogicException`. The collection is read-only.              |
+| `string`                 | `current()`                         | `Iterator::current()` Return the current element                   |
+| `string`                 | `key()`                             | `Iterator::key()` Return key of the current element                |
+| `void`                   | `next()`                            | `Iterator::next()` Move forward to next element                    |
+| `void`                   | `rewind()`                          | `Iterator::rewind()` Rewind the iterator to the first element      |
+| `boolean`                | `valid()`                           | `Iterator::valid()` Checks if current position is valid            |
+
+1. This object implements `ArrayAccess`:
+     * `$xmlAttributesInterface[$offset]` calls `$xmlAttributesInterface->offsetGet($offset)`
+     * `isset($xmlAttributesInterface[$offset])` calls `$xmlAttributesInterface->offsetExists($offset)`
+     * `$xmlAttributesInterface[$offset] = $mixed` calls `$xmlAttributesInterface->offsetSet($offset, $mixed)` and throws an exception.
+     * `unset($xmlAttributesInterface[$offset])` calls `$xmlAttributesInterface->offsetUnset($offset)` and throws an exception.
+
+2. This object implements `Countable`:
+     * `count($xmlAttributesInterface)` calls `$xmlAttributesInterface->count()`
+
+3. This object implements `Iterator`
+     * `foreach($xmlAttributesInterface as $key => $value){}` calls `$xmlAttributesInterface->rewind()` once, `$xmlAttributesInterface->valid()` before each iteration, and if it returns true sets `$key = $xmlAttributesInterface->key(); $value = $xmlAttributesInterface->current()`. Finally calls `$xmlAttributesInterface->next()`.
+
 
 ## License
 
