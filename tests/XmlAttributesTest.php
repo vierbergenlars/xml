@@ -36,7 +36,7 @@ use vierbergenlars\Xml\XmlElementInterface;
 class XmlAttributesTest
     extends UnitTestCase
 {
-    private function getXmlAttributes()
+    private function getXmlElement()
     {
         $xml = <<<'XML'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -107,23 +107,22 @@ class XmlAttributesTest
   </entry>
 </result>
 XML;
-        $x   = new XmlElement(new SimpleXMLElement($xml));
-        return $x->attributes();
+        return new XmlElement(new SimpleXMLElement($xml));
     }
 
     public function testGet()
     {
-        $this->assertEqual($this->getXmlAttributes()->get('page'), 1);
+        $this->assertEqual($this->getXmlElement()->attributes()->get('page'), 1);
     }
 
     public function testCount()
     {
-        $this->assertEqual($this->getXmlAttributes()->count(), 3);
+        $this->assertEqual($this->getXmlElement()->attributes()->count(), 3);
     }
 
     public function testIteration()
     {
-        $attributes = $this->getXmlAttributes();
+        $attributes = $this->getXmlElement()->attributes();
 
         $this->assertTrue($attributes->valid());
         $this->assertEqual($attributes->current(), 1);
@@ -149,7 +148,7 @@ XML;
 
     public function testArrayAccess()
     {
-        $attributes = $this->getXmlAttributes();
+        $attributes = $this->getXmlElement()->attributes();
 
         $this->assertNotNull($attributes['page']);
         $this->assertTrue($attributes->offsetExists('page'));
@@ -161,15 +160,22 @@ XML;
     public function testArrayAccessSet()
     {
         $this->expectException();
-        $attributes         = $this->getXmlAttributes();
+        $attributes         = $this->getXmlElement()->attributes();
         $attributes['page'] = 1;
     }
 
     public function testArrayAccessUnset()
     {
         $this->expectException();
-        $attributes = $this->getXmlAttributes();
+        $attributes = $this->getXmlElement()->attributes();
         unset($attributes['total']);
+    }
+
+    public function testNoAttributesElement()
+    {
+        $empty = $this->getXmlElement()->child()->child('filename')->attributes();
+        $this->assertEqual($empty->count(), 0);
+        $this->assertFalse($empty->valid());
     }
 
 }

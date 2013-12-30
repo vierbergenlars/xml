@@ -31,12 +31,14 @@ use \SimpleXMLElement;
 class XmlAttributes
     implements XmlAttributesInterface
 {
-    private $array;
+    private $array = array();
 
     public function __construct(SimpleXMLElement $elem)
     {
-        $elem        = (array) $elem;
-        $this->array = (array) $elem['@attributes'];
+        $elem = (array) $elem;
+        if(isset($elem['@attributes'])) {
+            $this->array = (array) $elem['@attributes'];
+        }
     }
 
     public function get($name)

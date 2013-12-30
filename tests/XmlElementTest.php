@@ -137,6 +137,7 @@ XML;
     {
         $element = $this->getXmlElement();
         $this->assertTrue($element->child() instanceof XmlElementInterface);
+        $this->assertEqual($element->child()->child('filename')->text(), 'Screenshot from 2013-10-21 19:31:42.png');
         $this->assertEqual($element->child()->attr('id'), 30);
         $this->assertEqual($element->child()->child('link')->attr('href'), '/files/30');
         $this->assertEqual($element->child()->child('link', array(), 2)->attr('href'), '/users/vierbergenlars');
