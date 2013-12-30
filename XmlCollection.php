@@ -99,6 +99,8 @@ class XmlCollection
 
     public function find($query = array())
     {
+        if($query == array())
+            return new self($this->elem);
         $foundElements = array();
         foreach($this as $element) {
             /* @var $element XmlElement */
