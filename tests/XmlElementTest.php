@@ -133,6 +133,20 @@ XML;
         $this->assertTrue($attributes instanceof XmlAttributesInterface);
     }
 
+    public function testChild()
+    {
+        $element = $this->getXmlElement();
+        $this->assertTrue($element->child() instanceof XmlElementInterface);
+        $this->assertEqual($element->child()->attr('id'), 30);
+        $this->assertEqual($element->child()->child('link')->attr('href'), '/files/30');
+        $this->assertEqual($element->child()->child('link', array(), 2)->attr('href'), '/users/vierbergenlars');
+        $this->assertNull($element->child()->child('link', array(), 3));
+
+        $this->assertEqual($element->child()->child('link', array('rel' => 'self'))->attr('href'), '/files/30');
+        $this->assertEqual($element->child()->child('link', array('rel' => 'self'), 1)->attr('type'), 'www');
+        $this->assertNull($element->child()->child('link', array('rel' => 'self'), 2));
+    }
+
     public function testChildren()
     {
         $children = $this->getXmlElement()->children();

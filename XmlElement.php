@@ -58,6 +58,11 @@ class XmlElement
         return new XmlAttributes($this->elem);
     }
 
+    public function child($name = null, $filter = array(), $pos = 0)
+    {
+        return $this->children($name)->find($filter)->get($pos);
+    }
+
     public function children($name = null)
     {
         if($name !== null) {

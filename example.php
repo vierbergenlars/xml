@@ -65,7 +65,7 @@ $files = $xmlElement->children();
 foreach($files as $file) {
     /* @var $file XmlElementInterface */
     echo 'File ' . $file->attr('id') . ":\n";
-    // echo '  Filename: ' . $file->children('filename')->get(0)->text() . "\n";
+    // echo '  Filename: ' . $file->child('filename')->text() . "\n";
     foreach($file->children() as $fileProperty) {
         /* @var $fileProperty XmlElementInterface */
         if($fileProperty->getName() != 'link')
@@ -83,6 +83,7 @@ foreach($files as $file) {
     }
 
     echo '  Weblink: ' . $file->children('link')->find(array('rel'  => 'self', 'type' => 'www'))->get(0)->attr('href') . "\n";
+//    echo '  Weblink: ' . $file->child('link', array('rel'  => 'self', 'type' => 'www'))->attr('href') . "\n";
 }
 
 echo 'Total: ' . $files->count() . "\n";

@@ -90,18 +90,17 @@ A `->find($attrs = array())` function is provided that returns a new `XmlCollect
 foreach($files as $file) {
     /* @var $file XmlElementInterface */
     echo 'File ' . $file->attr('id') . ":\n";
-    echo '  Filename: ' . $file->children('filename')->get(0)->text() . "\n";
+    echo '  Filename: ' . $file->child('filename')->text() . "\n";
 ```
 
-Here, the children of `$file` are filtered to contain only elements with tagname `<filename>`.
-Next, the first (and only) element is retrieved with `->get(0)`, and the text between its tags is returned (with `->text()`).`
+The first element is selected, and the text between its tags is returned (with `->text()`).`
 
 ```php
     echo "  Links:\n";
     foreach($file->children('link') as $link) {
 ```
 
-Only the `<link>` elements are selected for iteration.
+Here, the children of `$file` are filtered to contain only elements with tagname `<link>`.
 
 ```php
         /* @var $link XmlElementInterface */
@@ -125,8 +124,10 @@ Additionally, it has a `->get($idx)` function for easier chaining.
 ```
 
 This is an example of using `XmlCollectionInterface::find()` to only select the one `<link>` element with the desired attributes.
+An equivalent using `XmlElementInterface::child()` is commented-out below.
 
 ```php
+//    echo '  Weblink: ' . $file->child('link', array('rel'  => 'self', 'type' => 'www'))->attr('href') . "\n";
 }
 
 echo 'Total: ' . $files->count() . "\n";
@@ -136,14 +137,15 @@ echo 'Total: ' . $files->count() . "\n";
 
 ### `XmlElementInterface`
 
-| Return                   | Function signature                  | Documentation                                                                               |
-|-------------------------:|:------------------------------------|---------------------------------------------------------------------------------------------|
-| `string`                 | `getName()`                         | Get the element tag name                                                                    |
-| `string`                 | `text()`                            | Get the text contained in the element                                                       |
-| `string`                 | `attr(string $name)`                | Get the value of the attribute `$name` on the element                                       |
-| `XmlAttributesInterface` | `attributes()`                      | Gets all attributes on the element                                                          |
-| `XmlCollectionInterface` | `children(string $name = null)`     | Get all children of the element (or only those with the specified name if `$name !== null`) |
-| `XmlCollectionInterface` | `find(array $attributes = array())` | Get the children of the element whose attributes match those in `$attributes`.              |
+| Return                   | Function signature                                                | Documentation                                                                                             |
+|-------------------------:|:------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| `string`                 | `getName()`                                                       | Get the element tag name                                                                                  |
+| `string`                 | `text()`                                                          | Get the text contained in the element                                                                     |
+| `string`                 | `attr(string $name)`                                              | Get the value of the attribute `$name` on the element (equivalent to `->attributes()->get($name)`)        |
+| `XmlAttributesInterface` | `attributes()`                                                    | Gets all attributes on the element                                                                        |
+| `XmlElementInterface`    | `child(string $name = null, array $filter = array(), int $n = 0)` | Gets the `$n`th child with the specified name (equivalent to `->children($name)->find($filter)->pos($n)`) |
+| `XmlCollectionInterface` | `children(string $name = null)`                                   | Get all children of the element (or only those with the specified name if `$name !== null`)               |
+| `XmlCollectionInterface` | `find(array $attributes = array())`                               | Get the children of the element whose attributes match those in `$attributes`.                            |
 
 ### `XmlCollectionInterface`
 

@@ -53,6 +53,14 @@ interface XmlElementInterface
      */
     public function attributes();
     /**
+     * Gets the child with the specified name at the specified position
+     * @param string $name The name of the children to get
+     * @param array $filter Filter the children of the element on their attributes
+     * @param int $pos The position of the child to get from the collection
+     * @return XmlElementInterface
+     */
+    public function child($name = null, $filter = array(), $pos = 0);
+    /**
      * Gets all children with the specified name
      * @param string $name The name of the children to get
      * @return XmlCollectionInterface
