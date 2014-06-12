@@ -31,7 +31,7 @@ use vierbergenlars\Xml\XmlElementInterface;
 use vierbergenlars\Xml\XmlCollectionInterface;
 use vierbergenlars\Xml\XmlAttributesInterface;
 
-$xml = <<<'XML'
+$xml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <result page="1" items_per_page="2" total="8">
   <entry id="30">
