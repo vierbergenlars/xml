@@ -98,5 +98,9 @@ class XmlAttributes
         return $this->array[$offset];
     }
 
+    public function __toString()
+    {
+        return $this->element->asXML();
+    }
 }
 

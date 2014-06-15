@@ -116,5 +116,13 @@ class XmlCollection
         return new XmlArrayCollection($foundElements);
     }
 
+    public function __toString()
+    {
+        $xml = '';
+        foreach($this as $element) {
+            $xml.=$element->__toString()."\n";
+        }
+        return $xml;
+    }
 }
 

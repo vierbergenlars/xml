@@ -80,5 +80,9 @@ class XmlElement
         return new XmlArrayCollection($this->elem->xpath($findStr));
     }
 
+    public function __toString()
+    {
+        return $this->elem->asXML();
+    }
 }
 
