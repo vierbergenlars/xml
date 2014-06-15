@@ -50,7 +50,7 @@ class XmlArrayCollection
     {
         if(!isset($this->array[$offset]))
             return null;
-        if($this->array[$offset] instanceof XmlElement)
+        if($this->array[$offset] instanceof XmlElementInterface)
             return $this->array[$offset];
         return new XmlElement($this->array[$offset]);
     }
