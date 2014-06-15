@@ -31,10 +31,12 @@ use \SimpleXMLElement;
 class XmlAttributes
     implements XmlAttributesInterface
 {
+    private $element;
     private $array = array();
 
     public function __construct(SimpleXMLElement $elem)
     {
+        $this->element = $elem;
         $elem = (array) $elem;
         if(isset($elem['@attributes'])) {
             $this->array = (array) $elem['@attributes'];
@@ -78,7 +80,8 @@ class XmlAttributes
 
     public function offsetUnset($index)
     {
-        throw new \LogicException;
+        unset($this->element[$index]);
+        unset($this->array[$index]);
     }
 
     public function count()

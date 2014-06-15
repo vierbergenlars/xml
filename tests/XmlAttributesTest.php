@@ -41,70 +41,7 @@ class XmlAttributesTest
         $xml = <<<'XML'
 <?xml version="1.0" encoding="UTF-8"?>
 <result page="1" items_per_page="8" total="9">
-  <entry id="30">
     <filename><![CDATA[Screenshot from 2013-10-21 19:31:42.png]]></filename>
-    <course id="1"><![CDATA[Algebra]]></course>
-    <type id="1"><![CDATA[Oefening]]></type>
-    <link rel="self" href="/files/30" type="api"/>
-    <link rel="self" href="http://bay.dev/file/Algebra/Oefening/Screenshot%20from%202013-10-21%2019:31:42.png" type="www"/>
-    <link rel="author" href="/users/vierbergenlars"/>
-  </entry>
-  <entry id="35">
-    <filename><![CDATA[Giraffe-wild-animals-2614055-1024-818.jpg]]></filename>
-    <course id="1"><![CDATA[Algebra]]></course>
-    <type id="1"><![CDATA[Oefening]]></type>
-    <link rel="self" href="/files/35" type="api"/>
-    <link rel="self" href="http://bay.dev/file/Algebra/Oefening/Giraffe-wild-animals-2614055-1024-818.jpg" type="www"/>
-    <link rel="author" href="/users/vierbergenlars"/>
-  </entry>
-  <entry id="36">
-    <filename><![CDATA[rabid-giraffe1.jpg]]></filename>
-    <course id="3"><![CDATA[Dynamica van Puntmassas]]></course>
-    <type id="1"><![CDATA[Oefening]]></type>
-    <link rel="self" href="/files/36" type="api"/>
-    <link rel="self" href="http://bay.dev/file/Dynamica%20van%20Puntmassas/Oefening/rabid-giraffe1.jpg" type="www"/>
-    <link rel="author" href="/users/vierbergenlars"/>
-  </entry>
-  <entry id="37">
-    <filename><![CDATA[logo.png]]></filename>
-    <course id="1"><![CDATA[Algebra]]></course>
-    <type id="2"><![CDATA[Oplossing]]></type>
-    <link rel="self" href="/files/37" type="api"/>
-    <link rel="self" href="http://bay.dev/file/Algebra/Oplossing/logo.png" type="www"/>
-    <link rel="author" href="/users/user"/>
-  </entry>
-  <entry id="40">
-    <filename><![CDATA[Screen Shot 2013-11-17 at 13.34.30.xcf]]></filename>
-    <course id="1"><![CDATA[Algebra]]></course>
-    <type id="1"><![CDATA[Oefening]]></type>
-    <link rel="self" href="/files/40" type="api"/>
-    <link rel="self" href="http://bay.dev/file/Algebra/Oefening/Screen%20Shot%202013-11-17%20at%2013.34.30.xcf" type="www"/>
-    <link rel="author" href="/users/vierbergenlars"/>
-  </entry>
-  <entry id="45">
-    <filename><![CDATA[passwd]]></filename>
-    <course id="1"><![CDATA[Algebra]]></course>
-    <type id="1"><![CDATA[Oefening]]></type>
-    <link rel="self" href="/files/45" type="api"/>
-    <link rel="self" href="http://bay.dev/file/Algebra/Oefening/passwd" type="www"/>
-    <link rel="author" href="/users/vierbergenlars"/>
-  </entry>
-  <entry id="68">
-    <filename><![CDATA[composer.lock]]></filename>
-    <course id="1"><![CDATA[Algebra]]></course>
-    <type id="1"><![CDATA[Oefening]]></type>
-    <link rel="self" href="/files/68" type="api"/>
-    <link rel="self" href="http://bay.dev/file/Algebra/Oefening/composer.lock" type="www"/>
-    <link rel="author" href="/users/vierbergenlars"/>
-  </entry>
-  <entry id="69">
-    <filename><![CDATA[composer.json]]></filename>
-    <course id="1"><![CDATA[Algebra]]></course>
-    <type id="1"><![CDATA[Oefening]]></type>
-    <link rel="self" href="/files/69" type="api"/>
-    <link rel="self" href="http://bay.dev/file/Algebra/Oefening/composer.json" type="www"/>
-    <link rel="author" href="/users/vierbergenlars"/>
-  </entry>
 </result>
 XML;
         return new XmlElement(new SimpleXMLElement($xml));
@@ -166,14 +103,20 @@ XML;
 
     public function testArrayAccessUnset()
     {
-        $this->expectException();
-        $attributes = $this->getXmlElement()->attributes();
+        $el = $this->getXmlElement();
+        $attributes = $el->attributes();
         unset($attributes['total']);
+        $this->assertEqual(str_replace(array("\n","\t", '  '), '',$el->__toString()),
+'<?xml version="1.0" encoding="UTF-8"?>'.
+'<result page="1" items_per_page="8">'.
+    '<filename><![CDATA[Screenshot from 2013-10-21 19:31:42.png]]></filename>'.
+'</result>');
+
     }
 
     public function testNoAttributesElement()
     {
-        $empty = $this->getXmlElement()->child()->child('filename')->attributes();
+        $empty = $this->getXmlElement()->child('filename')->attributes();
         $this->assertEqual($empty->count(), 0);
         $this->assertFalse($empty->valid());
     }

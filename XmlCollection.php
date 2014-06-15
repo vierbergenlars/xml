@@ -59,7 +59,7 @@ class XmlCollection
 
     public function offsetUnset($offset)
     {
-        throw new \LogicException;
+        unset($this->elem[$offset]);
     }
 
     public function current()

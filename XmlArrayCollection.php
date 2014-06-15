@@ -50,6 +50,11 @@ class XmlArrayCollection
         return new XmlElement($this->array[$offset]);
     }
 
+    public function offsetUnset($offset)
+    {
+        throw new \LogicException;
+    }
+
     public function count()
     {
         return count($this->array);

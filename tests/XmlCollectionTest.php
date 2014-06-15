@@ -36,7 +36,7 @@ use vierbergenlars\Xml\XmlElementInterface;
 class XmlCollectionTest
     extends UnitTestCase
 {
-    private function getXmlCollection()
+    private function getXmlElement()
     {
         $xml = <<<'XML'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -107,8 +107,12 @@ class XmlCollectionTest
   </entry>
 </result>
 XML;
-        $x   = new XmlElement(new SimpleXMLElement($xml));
-        return $x->children();
+        return new XmlElement(new SimpleXMLElement($xml));
+    }
+
+    private function getXmlCollection()
+    {
+        return $this->getXmlElement()->children();
     }
 
     public function testCount()
@@ -168,9 +172,9 @@ XML;
 
     public function testArrayAccessUnset()
     {
-        $this->expectException();
         $collection = $this->getXmlCollection();
         unset($collection[3]);
+        $this->assertFalse(strpos($collection->__toString(), '<entry id="37">'));
     }
 
     public function testGet()
