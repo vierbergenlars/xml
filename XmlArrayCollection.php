@@ -54,13 +54,5 @@ class XmlArrayCollection
     {
         return count($this->array);
     }
-
-    public function find($query = array())
-    {
-        if($query == array())
-            return new self($this->array);
-        return parent::find($query);
-    }
-
 }
 
