@@ -195,4 +195,49 @@ XML;
         $this->assertEqual($collection->find(array('nx' => 1))->count(), 0);
     }
 
+    public function testAddName()
+    {
+        $collection = $this->getXmlCollection();
+        $el = $collection->add('xx');
+        $this->assertTrue($el instanceof XmlElementInterface);
+        $this->assertEqual($el->getName(), 'xx');
+        $el->setText('yy');
+        $el->attributes()->set('id', 5);
+
+        $this->assertTrue(strpos($collection->__toString(), '<xx id="5">yy</xx>'));
+    }
+
+    public function testAddNameString()
+    {
+        $collection = $this->getXmlCollection();
+        $el = $collection->add('xx', 'yy');
+        $this->assertTrue($el instanceof XmlElementInterface);
+        $this->assertEqual($el->getName(), 'xx');
+        $this->assertEqual($el->text(), 'yy');
+        $el->attributes()->set('id', 5);
+
+        $this->assertTrue(strpos($collection->__toString(), '<xx id="5">yy</xx>'));
+    }
+
+    public function testAddXmlElement()
+    {
+        $el1 = new XmlElement(new SimpleXMLElement('<data p="d" va="re"><piece n="0">a</piece><piece n="1">b</piece></data>'));
+        $el1Str = $el1->__toString();
+        $collection = $this->getXmlCollection();
+        $el = $collection->add($el1);
+        $this->assertSame($el1Str, '<'.'?xml version="1.0"?>'."\n".$el->__toString()."\n");
+        $added = $collection->find(array('p'=>'d', 'va'=>'re'));
+        $this->assertEqual(1, count($added));
+    }
+
+    public function testAddXmlElementName()
+    {
+        $el1 = new XmlElement(new SimpleXMLElement('<data p="d" va="re"><piece n="0">a</piece><piece n="1">b</piece></data>'));
+        $el1Str = $el1->__toString();
+        $collection = $this->getXmlCollection();
+        $el = $collection->add('xx', $el1);
+        $this->assertSame(str_replace('data', 'xx', $el1Str), '<'.'?xml version="1.0"?>'."\n".$el->__toString()."\n");
+        $added = $collection->find(array('p'=>'d', 'va'=>'re'));
+        $this->assertEqual(1, count($added));
+    }
 }

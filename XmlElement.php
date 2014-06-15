@@ -43,9 +43,19 @@ class XmlElement
         return $this->elem->getName();
     }
 
+    public function _swapoutInternal(SimpleXMLElement $elem)
+    {
+        $this->elem = $elem;
+    }
+
     public function text()
     {
         return (string) $this->elem;
+    }
+
+    public function setText($text)
+    {
+        $this->elem[0] = $text;
     }
 
     public function attr($name)
@@ -56,6 +66,34 @@ class XmlElement
     public function attributes()
     {
         return new XmlAttributes($this->elem);
+    }
+
+    public function addChild($name, $value = null)
+    {
+        if($name instanceof XmlElementInterface) {
+            $value = $name;
+            $name = $value->getName();
+        }
+
+        $coreElement = $this->elem->addChild($name);
+        $element = new XmlElement($coreElement);
+        if($value instanceof XmlElementInterface) {
+            foreach($value->attributes() as $k => $v) {
+                $element->attributes()->set($k, $v);
+            }
+
+            foreach($value->children() as $child) {
+                $element->addChild($child);
+            }
+
+            if($value->text()) {
+                $element->setText($value->text());
+            }
+            $value->_swapoutInternal($coreElement);
+        } else {
+            $element->setText($value);
+        }
+        return $element;
     }
 
     public function child($name = null, $filter = array(), $pos = 0)

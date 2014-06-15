@@ -121,6 +121,13 @@ XML;
         $this->assertEqual($this->getXmlElement()->children()->get(0)->children('filename')->get(0)->text(), 'Screenshot from 2013-10-21 19:31:42.png');
     }
 
+    public function testSetText()
+    {
+        $el = $this->getXmlElement();
+        $el->children()->get(0)->children('filename')->get(0)->setText('aaabbbcccddd');
+        $this->assertTrue(strpos($el->__toString(), 'aaabbbcccddd'));
+    }
+
     public function testAttr()
     {
         $this->assertEqual($this->getXmlElement()->attr('page'), 1);
@@ -173,6 +180,52 @@ XML;
         $this->assertEqual($children->count(), 2);
         $this->assertEqual($children->get(0)->attr('rel'), 'self');
         $this->assertEqual($children->get(1)->attr('rel'), 'self');
+    }
+
+    public function testAddName()
+    {
+        $element = $this->getXmlElement();
+        $el = $element->addChild('xx');
+        $this->assertTrue($el instanceof XmlElementInterface);
+        $this->assertEqual($el->getName(), 'xx');
+        $el->setText('yy');
+        $el->attributes()->set('id', 5);
+
+        $this->assertTrue(strpos($element->__toString(), '<xx id="5">yy</xx>'));
+    }
+
+    public function testAddNameString()
+    {
+        $element = $this->getXmlElement();
+        $el = $element->addChild('xx', 'yy');
+        $this->assertTrue($el instanceof XmlElementInterface);
+        $this->assertEqual($el->getName(), 'xx');
+        $this->assertEqual($el->text(), 'yy');
+        $el->attributes()->set('id', 5);
+
+        $this->assertTrue(strpos($element->__toString(), '<xx id="5">yy</xx>'));
+    }
+
+    public function testAddXmlElement()
+    {
+        $el1 = new XmlElement(new SimpleXMLElement('<data p="d" va="re"><piece n="0">a</piece><piece n="1">b</piece></data>'));
+        $el1Str = $el1->__toString();
+        $element = $this->getXmlElement();
+        $el = $element->addChild($el1);
+        $this->assertSame($el1Str, '<'.'?xml version="1.0"?>'."\n".$el->__toString()."\n");
+        $added = $element->child('data');
+        $this->assertEqual($added->__toString(), $el->__toString());
+    }
+
+    public function testAddXmlElementName()
+    {
+        $el1 = new XmlElement(new SimpleXMLElement('<data p="d" va="re"><piece n="0">a</piece><piece n="1">b</piece></data>'));
+        $el1Str = $el1->__toString();
+        $element = $this->getXmlElement();
+        $el = $element->addChild('xx', $el1);
+        $this->assertSame(str_replace('data', 'xx', $el1Str), '<'.'?xml version="1.0"?>'."\n".$el->__toString()."\n");
+        $added = $element->child('xx');
+        $this->assertEqual($added->__toString(), $el->__toString());
     }
 
 }

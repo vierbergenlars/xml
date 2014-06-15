@@ -52,6 +52,13 @@ class XmlCollection
         return new XmlElement($this->elem[$offset]);
     }
 
+    public function add($name, $value = null)
+    {
+        $parentElements = $this->elem->xpath('..');
+        $element = new XmlElement($parentElements[0]);
+        return $element->addChild($name, $value);
+    }
+
     public function offsetSet($offset, $value)
     {
         throw new \LogicException;

@@ -36,6 +36,11 @@ class XmlArrayCollection
         $this->array = $array;
     }
 
+    public function add($name, $value=null)
+    {
+        throw new \LogicException;
+    }
+
     public function offsetExists($offset)
     {
         return isset($this->array[$offset]);

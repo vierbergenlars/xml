@@ -41,17 +41,32 @@ interface XmlElementInterface
      * @return string
      */
     public function text();
+
+    /**
+     * Set the text contained in the element
+     * @param string $text
+     */
+    public function setText($text);
     /**
      * Gets the value of an attribute
      * @param string $name The name of the attribute to get
      * @return string
      */
     public function attr($name);
+
     /**
      * Gets all attributes of the element
      * @return XmlAttributesInterface
      */
     public function attributes();
+
+    /**
+     * Adds a new element as a child of the current element
+     * @param XmlElementInterface|string $name Name of the new element, or a description of the element
+     * @param XmlElementInterface|string|null $value Copies all properties from the given element, or sets its string value (only if $name is a string)
+     * @return XmlElementInterface The added element
+     */
+    public function addChild($name, $value = null);
     /**
      * Gets the child with the specified name at the specified position
      * @param string $name The name of the children to get
@@ -72,5 +87,12 @@ interface XmlElementInterface
      * @return XmlCollectionInterface
      */
     public function find($attributes = array());
+
+    /**
+     *
+     * @param \SimpleXMLElement $elem
+     * @internal
+     */
+    public function _swapoutInternal(\SimpleXMLElement $elem);
 }
 

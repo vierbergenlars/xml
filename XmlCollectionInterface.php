@@ -41,6 +41,16 @@ interface XmlCollectionInterface extends ArrayAccess, Iterator, Countable
      * @return XmlElementInterface
      */
     public function get($pos);
+
+    /**
+     * Adds a new element to the collection
+     * @param XmlElementInterface|string $name Name of the new element, or a description of the element
+     * @param XmlElementInterface|string|null $value Copies all properties from the given element, or sets its string value (only if $name is a string)
+     * @return XmlElementInterface The added element
+     * @see XmlElementInterface::addChild()
+     */
+    public function add($name, $value);
+
     /**
      * Filters members of the collection on their attributes
      * @param array $attributes

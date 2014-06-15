@@ -96,9 +96,15 @@ XML;
 
     public function testArrayAccessSet()
     {
-        $this->expectException();
-        $attributes         = $this->getXmlElement()->attributes();
-        $attributes['page'] = 1;
+        $el = $this->getXmlElement();
+        $attributes         = $el->attributes();
+        $attributes['page'] = 2;
+        $attributes['xxyyxx'] = 'abc';
+        $this->assertEqual(str_replace(array("\n","\t", '  '), '',$el->__toString()),
+'<?xml version="1.0" encoding="UTF-8"?>'.
+'<result page="2" items_per_page="8" total="9" xxyyxx="abc">'.
+    '<filename><![CDATA[Screenshot from 2013-10-21 19:31:42.png]]></filename>'.
+'</result>');
     }
 
     public function testArrayAccessUnset()

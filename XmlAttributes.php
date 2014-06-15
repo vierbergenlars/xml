@@ -48,6 +48,11 @@ class XmlAttributes
         return $this[$name];
     }
 
+    public function set($name, $value)
+    {
+        $this[$name] = $value;
+    }
+
     public function current()
     {
         return current($this->array);
@@ -75,7 +80,12 @@ class XmlAttributes
 
     public function offsetSet($index, $newval)
     {
-        throw new \LogicException;
+        if($this->offsetExists($index)) {
+            $this->element[$index] = $newval;
+        } else {
+            $this->element->addAttribute($index, $newval);
+        }
+        $this->array[$index] = $newval;
     }
 
     public function offsetUnset($index)
