@@ -51,6 +51,7 @@ class XmlAttributes
     public function set($name, $value)
     {
         $this[$name] = $value;
+        return $this;
     }
 
     public function current()

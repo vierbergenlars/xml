@@ -141,9 +141,14 @@ echo 'Total: ' . $files->count() . "\n";
 |-------------------------:|:------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
 | `string`                 | `getName()`                                                       | Get the element tag name                                                                                  |
 | `string`                 | `text()`                                                          | Get the text contained in the element                                                                     |
+| `XmlElementInterface`    | `setText(string $text)`                                           | Set the text contained in the element to `$text`. Returns itself.                                         |
 | `string`                 | `attr(string $name)`                                              | Get the value of the attribute `$name` on the element (equivalent to `->attributes()->get($name)`)        |
 | `XmlAttributesInterface` | `attributes()`                                                    | Gets all attributes on the element                                                                        |
 | `XmlElementInterface`    | `child(string $name = null, array $filter = array(), int $n = 0)` | Gets the `$n`th child with the specified name (equivalent to `->children($name)->find($filter)->pos($n)`) |
+| `XmlElementInterface`    | `addChild(string $name)`                                          | Adds a child with tagname `$name` to the current element. The returned element can be modified.           |
+| `XmlElementInterface`    | `addChild(string $name, string $text)`                            | Adds a child with tagname `$name` and text content `$text` (`->addChild($name)->setText($text)`)          |
+| `XmlElementInterface`    | `addChild(string $name, XmlElementInterface $element)`            | Adds a child with tagname `$name` and sets its content and attributes to the same as `$element`           |
+| `XmlElementInterface`    | `addChild(XmlElementInterface $element)`                          | Adds a child to the current element, with tagname, content and attributes the same as `$element`          |
 | `XmlCollectionInterface` | `children(string $name = null)`                                   | Get all children of the element (or only those with the specified name if `$name !== null`)               |
 | `XmlCollectionInterface` | `find(array $attributes = array())`                               | Get the children of the element whose attributes match those in `$attributes`.                            |
 
@@ -154,12 +159,13 @@ Implements interfaces `Iterator`, `ArrayAccess`, `Countable`
 | Return                   | Function signature                  | Documentation                                                     |
 |-------------------------:|:------------------------------------|-------------------------------------------------------------------|
 | `XmlElementInterface`    | `get(int $pos)`                     | Get the element at the given position                             |
+| `XmlElementInterface`    | `add($name, $value = null)`         | Calls `XmlElementInterface::addChild()` on the parent element     |
 | `XmlCollectionInterface` | `find(array $attributes = array())` | Filters members of the collection on their attributes             |
 | `int`                    | `count()`                           | `Countable::count()` Count the elements in the collection         |
 | `boolean`                | `offsetExists(int $offset)`         | `ArrayAccess::offsetExists` Whether a offset exists (see `get()`) |
 | `XmlElementInterface`    | `offsetGet(int $offset)`            | `ArrayAccess::offsetGet()` Offset to retrieve                     |
-| -                        | `offsetSet()`                       | Throws `LogicException`. The collection is read-only.             |
-| -                        | `offsetUnset()`                     | Throws `LogicException`. The collection is read-only.             |
+| -                        | `offsetSet()`                       | Throws `LogicException`. The collection cannot be modified in this way
+| -                        | `offsetUnset(int $offset)`          | `ArrayAcess:offsetUnset()` Removes element at `$offset` from collection
 | `XmlElementInterface`    | `current()`                         | `Iterator::current()` Return the current element                  |
 | `int`                    | `key()`                             | `Iterator::key()` Return key of the current element               |
 | `void`                   | `next()`                            | `Iterator::next()` Move forward to next element                   |
@@ -170,7 +176,7 @@ Implements interfaces `Iterator`, `ArrayAccess`, `Countable`
   * `$xmlCollectionInterface[$offset]` calls `$xmlCollectionInterface->offsetGet($offset)`
   * `isset($xmlCollectionInterface[$offset])` calls `$xmlCollectionInterface->offsetExists($offset)`
   * `$xmlCollectionInterface[$offset] = $mixed` calls `$xmlCollectionInterface->offsetSet($offset, $mixed)` and throws an exception.
-  * `unset($xmlCollectionInterface[$offset])` calls `$xmlCollectionInterface->offsetUnset($offset)` and throws an exception.
+  * `unset($xmlCollectionInterface[$offset])` calls `$xmlCollectionInterface->offsetUnset($offset)`
 
 2. This object implements `Countable`:
   * `count($xmlCollectionInterface)` calls `$xmlCollectionInterface->count()`
@@ -185,11 +191,12 @@ Implements interfaces `Iterator`, `ArrayAccess`, `Countable`
 | Return                   | Function signature                  | Documentation                                                      |
 |-------------------------:|:------------------------------------|--------------------------------------------------------------------|
 | `string` or `null`       | `get(string $name)`                 | Get the value of the attribute `$name`                             |
+| `XmlAttributesInterface` | `set(string $name, strinv $value)`  | Sets attribute `$name` to value `$value`. Returns itself           |
 | `int`                    | `count()`                           | `Countable::count()` Count the elements in the collection          |
-| `boolean`                | `offsetExists(int $offset)`         | `ArrayAccess::offsetExists` Whether a offset exists  (see `get()`) |
-| `string` or `null`       | `offsetGet(int $offset)`            | `ArrayAccess::offsetGet()` Offset to retrieve                      |
-| -                        | `offsetSet()`                       | Throws `LogicException`. The collection is read-only.              |
-| -                        | `offsetUnset()`                     | Throws `LogicException`. The collection is read-only.              |
+| `boolean`                | `offsetExists(string $attr)`        | `ArrayAccess::offsetExists()` Whether an attribute exists          |
+| `string` or `null`       | `offsetGet(string $attr)`           | `ArrayAccess::offsetGet()` Attribute to retrieve (see `get()`)     |
+| -                        | `offsetSet(string $attr, string $val )` | `ArrayAccess:offsetSet()` Sets attribute to a value (see `set()`)
+| -                        | `offsetUnset(string $attr)`         | `ArrayAccess::offsetUnset()` Removes attribute from element        |
 | `string`                 | `current()`                         | `Iterator::current()` Return the current element                   |
 | `string`                 | `key()`                             | `Iterator::key()` Return key of the current element                |
 | `void`                   | `next()`                            | `Iterator::next()` Move forward to next element                    |
@@ -199,8 +206,8 @@ Implements interfaces `Iterator`, `ArrayAccess`, `Countable`
 1. This object implements `ArrayAccess`:
      * `$xmlAttributesInterface[$offset]` calls `$xmlAttributesInterface->offsetGet($offset)`
      * `isset($xmlAttributesInterface[$offset])` calls `$xmlAttributesInterface->offsetExists($offset)`
-     * `$xmlAttributesInterface[$offset] = $mixed` calls `$xmlAttributesInterface->offsetSet($offset, $mixed)` and throws an exception.
-     * `unset($xmlAttributesInterface[$offset])` calls `$xmlAttributesInterface->offsetUnset($offset)` and throws an exception.
+     * `$xmlAttributesInterface[$offset] = $mixed` calls `$xmlAttributesInterface->offsetSet($offset, $mixed)`
+     * `unset($xmlAttributesInterface[$offset])` calls `$xmlAttributesInterface->offsetUnset($offset)`
 
 2. This object implements `Countable`:
      * `count($xmlAttributesInterface)` calls `$xmlAttributesInterface->count()`

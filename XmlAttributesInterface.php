@@ -46,6 +46,7 @@ interface XmlAttributesInterface extends ArrayAccess, Iterator, Countable
      * Sets the value of the attribute with the specified name
      * @param string $name
      * @param string $value
+     * @return XmlAttributesInterface Fluent interface
      */
     public function set($name, $value);
 }

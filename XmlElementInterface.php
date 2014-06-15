@@ -45,6 +45,7 @@ interface XmlElementInterface
     /**
      * Set the text contained in the element
      * @param string $text
+     * @return XmlElementInterface Fluent interface
      */
     public function setText($text);
     /**

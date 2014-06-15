@@ -56,6 +56,7 @@ class XmlElement
     public function setText($text)
     {
         $this->elem[0] = $text;
+        return $this;
     }
 
     public function attr($name)
