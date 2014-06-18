@@ -114,7 +114,13 @@ class XmlAttributes
 
     public function __toString()
     {
-        return $this->element->asXML();
+        $dom = new \DOMDocument();
+        $dom->formatOutput = true;
+        $dom->preserveWhiteSpace = false;
+
+        $dom->loadXML($this->element->asXML());
+
+        return $dom->saveXml();
     }
 }
 

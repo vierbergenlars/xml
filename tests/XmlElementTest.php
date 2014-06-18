@@ -212,7 +212,7 @@ XML;
         $el1Str = $el1->__toString();
         $element = $this->getXmlElement();
         $el = $element->addChild($el1);
-        $this->assertSame($el1Str, '<'.'?xml version="1.0"?>'."\n".$el->__toString()."\n");
+        $this->assertSame($el1Str, $el->__toString());
         $added = $element->child('data');
         $this->assertEqual($added->__toString(), $el->__toString());
     }
@@ -223,7 +223,7 @@ XML;
         $el1Str = $el1->__toString();
         $element = $this->getXmlElement();
         $el = $element->addChild('xx', $el1);
-        $this->assertSame(str_replace('data', 'xx', $el1Str), '<'.'?xml version="1.0"?>'."\n".$el->__toString()."\n");
+        $this->assertSame(str_replace('data', 'xx', $el1Str), $el->__toString());
         $added = $element->child('xx');
         $this->assertEqual($added->__toString(), $el->__toString());
     }

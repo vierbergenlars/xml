@@ -121,7 +121,13 @@ class XmlElement
 
     public function __toString()
     {
-        return $this->elem->asXML();
+        $dom = new \DOMDocument();
+        $dom->formatOutput = true;
+        $dom->preserveWhiteSpace = false;
+
+        $dom->loadXML($this->elem->asXML());
+
+        return $dom->saveXml();
     }
 }
 

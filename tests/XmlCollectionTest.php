@@ -225,7 +225,7 @@ XML;
         $el1Str = $el1->__toString();
         $collection = $this->getXmlCollection();
         $el = $collection->add($el1);
-        $this->assertSame($el1Str, '<'.'?xml version="1.0"?>'."\n".$el->__toString()."\n");
+        $this->assertSame($el1Str, $el->__toString());
         $added = $collection->find(array('p'=>'d', 'va'=>'re'));
         $this->assertEqual(1, count($added));
     }
@@ -236,7 +236,7 @@ XML;
         $el1Str = $el1->__toString();
         $collection = $this->getXmlCollection();
         $el = $collection->add('xx', $el1);
-        $this->assertSame(str_replace('data', 'xx', $el1Str), '<'.'?xml version="1.0"?>'."\n".$el->__toString()."\n");
+        $this->assertSame(str_replace('data', 'xx', $el1Str), $el->__toString());
         $added = $collection->find(array('p'=>'d', 'va'=>'re'));
         $this->assertEqual(1, count($added));
     }
